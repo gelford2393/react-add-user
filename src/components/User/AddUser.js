@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
+import Wrapper from "../UI/Wrapper";
 import style from "./AddUser.module.css";
 import ErrorModal from "../UI/ErrorModal";
 const AddUser = ({ onAddUser }) => {
+  const inputUserName = useRef();
+  const inputUserAge = useRef();
   const [enteredValue, setEnteredValue] = useState({
     username: "",
     age: "",
@@ -18,14 +21,14 @@ const AddUser = ({ onAddUser }) => {
     const validUser = (valid, data) => {
       setIsValid(valid);
       onAddUser(data);
-      setEnteredValue({
-        username: "",
-        age: "",
-      });
+      // setEnteredValue({
+      //   username: "",
+      //   age: "",
+      // });
     };
     if (
-      enteredValue.username.trim().length === 0 ||
-      enteredValue.age.trim().length === 0
+      inputUserName?.current?.value.trim().length === 0 ||
+      inputUserAge?.current?.value.trim().length === 0
     ) {
       setIsValid(false);
       setErrorMessage({
@@ -35,7 +38,7 @@ const AddUser = ({ onAddUser }) => {
       });
       return;
     }
-    if (enteredValue.age < 0) {
+    if (inputUserAge?.current?.value < 0) {
       setIsValid(false);
       setErrorMessage({
         ...errorMessage,
@@ -44,19 +47,23 @@ const AddUser = ({ onAddUser }) => {
       });
       return;
     }
-    isValid && validUser(true, enteredValue);
+    isValid &&
+      validUser(true, {
+        inputUserName: inputUserName?.current?.value,
+        inputUserAge: inputUserAge?.current?.value,
+      });
   };
-  const onHandleChange = (e) => {
-    const { id, value } = e.target;
+  // const onHandleChange = (e) => {
+  //   const { id, value } = e.target;
 
-    setEnteredValue({
-      ...enteredValue,
-      [id]: value,
-    });
-  };
+  //   setEnteredValue({
+  //     ...enteredValue,
+  //     [id]: value,
+  //   });
+  // };
 
   return (
-    <>
+    <Wrapper>
       {!isValid && (
         <ErrorModal
           title={errorMessage.title}
@@ -68,24 +75,14 @@ const AddUser = ({ onAddUser }) => {
       <Card className={style.input}>
         <form onSubmit={onHandleSubmit}>
           <label htmlFor="username">Username</label>
-          <input
-            value={enteredValue.username}
-            id="username"
-            type="text"
-            onChange={onHandleChange}
-          />
+          <input id="username" type="text" ref={inputUserName} />
           <label htmlFor="age">Age (Years)</label>
-          <input
-            value={enteredValue.age}
-            id="age"
-            type="number"
-            onChange={onHandleChange}
-          />
+          <input id="age" type="number" ref={inputUserAge} />
 
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </>
+    </Wrapper>
   );
 };
 

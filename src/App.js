@@ -5,6 +5,7 @@ import UserList from "./components/User/UserList";
 function App() {
   const [usersData, setUsersData] = useState([]);
   const onAddUser = (data) => {
+    console.log(data);
     setUsersData((prevUserData) => {
       return [...prevUserData, data];
     });

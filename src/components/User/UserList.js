@@ -5,7 +5,7 @@ const UserList = ({ users }) => {
   const displayUser = users.map((user, i) => {
     return (
       <li key={i}>
-        {user.username} {user.age} years old
+        {user.inputUserName} {user.inputUserAge} years old
       </li>
     );
   });
